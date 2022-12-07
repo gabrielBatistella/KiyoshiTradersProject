@@ -1,4 +1,8 @@
+# Código de cinemática inversa para o manipulador Barrett-WAM com 4 graus de liberdade
+# 4 juntas rotativas
+# Cinemática Inversa calculada manualmente
 import numpy as np
+
 
 def	juntas(px,py,pz):
     la = 0.55
