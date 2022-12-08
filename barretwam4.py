@@ -12,7 +12,7 @@ class BarretWAM_4(Manipulator):
     manipJointTypes = (True, True, True, True)      # Tupla de boolean (True = Rotativa ; False = Prismática)
 
     class Joints:
-        q_lim = np.deg2rad(((0, 360), (0, 360), (0, 360), (0, 360)))    ########### DRAMIN DPS COLOCA OS LIMITES DE CADA JUNTA PF
+        q_lim = np.deg2rad(((-150, 150), (-113, 113), (-157, 157), (-50, 180)))    ########### DRAMIN DPS COLOCA OS LIMITES DE CADA JUNTA PF
 
         def __init__(self, q1 = None, q2 = None, q3 = None, q4 = None):
             self._joints = [None, None, None, None]
