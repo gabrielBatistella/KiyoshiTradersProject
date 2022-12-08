@@ -52,9 +52,9 @@ class BarretWAM_4(Manipulator):
         super().__init__(BarretWAM_4.manipName, BarretWAM_4.manipDOF, BarretWAM_4.manipJointTypes)
 
     def fkine(self, jointVals : Joints):
-       px = np.cos(jointVals.q1)*(lc*np.cos(jointVals.q2 + jointVals.q4) + la*np.sin(jointVals.q2)) 
-       py = np.sin(jointVals.q1)*(lc*np.cos(jointVals.q2 + jointVals.q4) + la*np.sin(jointVals.q2)) 
-       pz = la*np.cos(jointVals.q2) - lc*np.sin(jointVals.q2 + jointVals.q4) 
+       px = la*np.cos(jointVals.q1)*np.sin(jointVals.q2) - lc*np.cos(jointVals.q4)*(np.sin(jointVals.q1)*np.sin(jointVals.q3) - np.cos(jointVals.q1)*np.cos(jointVals.q2)*np.cos(jointVals.q3)) - lc*np.cos(jointVals.q1)*np.sin(jointVals.q2)*np.sin(jointVals.q4)
+       py = lc*np.cos(q4)*(np.cos(jointVals.q1)*np.sin(jointVals.q3) + np.cos(jointVals.q2)*np.cos(jointVals.q3)*np.sin(jointVals.q1)) + la*np.sin(jointVals.q1)*np.sin(jointVals.q2) - lc*np.sin(jointVals.q1)*np.sin(jointVals.q2)*np.sin(jointVals.q4)
+       pz = la*np.cos(jointVals.q2) - lc*np.cos(jointVals.q2)*sin(jointVals.q4) - lc*np.cos(jointVals.q3)*np.cos(jointVals.q4)*np.sin(jointVals.q2) 
        
        return position.Point(px,py,pz)  ######## DRAMIN COLOCA AQUI A CINEMATICA DIRETA PF kkkkkkkkkk (SO DA TRANSLACAO MSM, A SAIDA EH UM POINT)
 
