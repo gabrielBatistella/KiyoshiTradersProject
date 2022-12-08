@@ -22,13 +22,13 @@ class Point:
     z = property(get_z, None)
 
     def dist(self):
-        return sqrt(self.x**2 + self.y**2 + self.z**2)
-
-    def __str__(self):
-        return "(" + str(self.x) + " ; " + str(self.y) + " ; " + str(self.z) + ")"
+        return sqrt(self._x**2 + self._y**2 + self._z**2)
 
     def __add__(self, otherPoint):
-        return Point(self.x + otherPoint.x, self.y + otherPoint.y, self.z + otherPoint.z)
+        return Point(self._x + otherPoint._x, self._y + otherPoint._y, self._z + otherPoint._z)
 
     def __sub__(self, otherPoint):
-        return Point(self.x - otherPoint.x, self.y - otherPoint.y, self.z - otherPoint.z)
+        return Point(self._x - otherPoint._x, self._y - otherPoint._y, self._z - otherPoint._z)
+
+    def __str__(self):
+        return "(" + str(round(self._x, 2)) + " ; " + str(round(self._y, 2)) + " ; " + str(round(self._z, 2)) + ")"
