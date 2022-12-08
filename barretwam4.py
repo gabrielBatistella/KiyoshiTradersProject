@@ -12,7 +12,7 @@ class BarretWAM_4(Manipulator):
     manipJointTypes = (True, True, True, True)      # Tupla de boolean (True = Rotativa ; False = Prismática)
 
     class Joints:
-        q_lim = np.deg2rad(((-150, 150), (-113, 113), (-157, 157), (-50, 180)))    ########### DRAMIN DPS COLOCA OS LIMITES DE CADA JUNTA PF
+        q_lim = np.deg2rad(((-150, 150), (-113, 113), (-157, 157), (-140, 90)))    ########### DRAMIN DPS COLOCA OS LIMITES DE CADA JUNTA PF
 
         def __init__(self, q1 = None, q2 = None, q3 = None, q4 = None):
             self._joints = [None, None, None, None]
@@ -52,7 +52,11 @@ class BarretWAM_4(Manipulator):
         super().__init__(BarretWAM_4.manipName, BarretWAM_4.manipDOF, BarretWAM_4.manipJointTypes)
 
     def fkine(self, jointVals : Joints):
-        pass        ######## DRAMIN COLOCA AQUI A CINEMATICA DIRETA PF kkkkkkkkkk (SO DA TRANSLACAO MSM, A SAIDA EH UM POINT)
+       px = np.cos(jointVals.q1)*(lc*np.cos(jointVals.q2 + jointVals.q4) + la*np.sin(jointVals.q2)) 
+       py = np.sin(jointVals.q1)*(lc*np.cos(jointVals.q2 + jointVals.q4) + la*np.sin(jointVals.q2)) 
+       pz = la*np.cos(jointVals.q2) - lc*np.sin(jointVals.q2 + jointVals.q4) 
+       
+       return position.Point(px,py,pz)  ######## DRAMIN COLOCA AQUI A CINEMATICA DIRETA PF kkkkkkkkkk (SO DA TRANSLACAO MSM, A SAIDA EH UM POINT)
 
     def ikine(self, point : Point):
         q1 = np.arctan2(point.y, point.x)
