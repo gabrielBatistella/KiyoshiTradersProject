@@ -4,6 +4,17 @@ import numpy as np
 import abc
 
 class Joints(abc.ABC):
+    """ 
+    An abstract class to represent the manipulator's joint values.
+
+    ...
+
+    Attributes
+    ----------
+    joints : float list
+        Manipulator's joint values, only accepts values within limits.
+    """
+    
     def __init__(self, dof):
         self._joints = [None] * dof
 
