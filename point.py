@@ -8,18 +8,17 @@ class Point:
         self._y = y
         self._z = z
     
-    def _getX(self):
+    @property
+    def x(self):
         return self._x
 
-    def _getY(self):
+    @property
+    def y(self):
         return self._y
     
-    def _getZ(self):
+    @property
+    def z(self):
         return self._z
-
-    x = property(_getX, None)
-    y = property(_getY, None)
-    z = property(_getZ, None)
 
     def dist(self):
         return sqrt(self._x**2 + self._y**2 + self._z**2)

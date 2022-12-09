@@ -5,27 +5,32 @@ from point import Point
 from joints import Joints
 
 class Manipulator(abc.ABC):
-    def __init__(self, name, dof, jointTypes, speed = 0.05):
+    def __init__(self, name, dof, jointTypes, jointLims, speed = 0.05):
         self._name = name
         self._dof = dof
         self._jointTypes = jointTypes
+        self._jointLims = jointLims
         self._speed = speed
 
-    def _getDOF(self):
+    @property
+    def dof(self):
         return self._dof
 
-    def _getJointTypes(self):
+    @property
+    def jointTypes(self):
         return self._jointTypes
 
-    def _getSpeed(self):
+    @property
+    def jointLims(self):
+        return self._jointLims
+
+    @property
+    def speed(self):
         return self._speed
     
-    def _setSpeed(self, speed):
+    @speed.setter
+    def speed(self, speed):
         self._speed = speed
-
-    dof = property(_getDOF, None)
-    jointTypes = property(_getJointTypes, None)
-    speed = property(_getSpeed, _setSpeed)
 
     @abc.abstractmethod
     class Joints(Joints):
