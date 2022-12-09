@@ -9,10 +9,16 @@ from manipulator import Manipulator
 class BarretWAM_4(Manipulator):
     manipName = "Barret-WAM (4 DOF)"
     manipDOF = 4
-    manipJointTypes = (True, True, True, True)      # Tupla de boolean (True = Rotativa ; False = Prismática)
+    manipJointTypes = (True, True, True, True)      # Tupla de boolean (True = Rotativa ; False = Prismática)   :   RRRR
 
-    class Joints:
-        q_lim = np.deg2rad(((-150, 150), (-113, 113), (-157, 157), (-140, 90)))    ########### DRAMIN DPS COLOCA OS LIMITES DE CADA JUNTA PF
+    def __init__(self):
+        super().__init__(BarretWAM_4.manipName, BarretWAM_4.manipDOF, BarretWAM_4.manipJointTypes)
+
+    class Joints():
+        q_lim = ((np.deg2rad(-150), np.deg2rad(150)),   # R
+                 (np.deg2rad(-113), np.deg2rad(113)),   # R
+                 (np.deg2rad(-157), np.deg2rad(157)),   # R
+                 (np.deg2rad(-140), np.deg2rad(90)))    # R
 
         def __init__(self, q1 = None, q2 = None, q3 = None, q4 = None):
             self._joints = [None, None, None, None]
@@ -48,15 +54,15 @@ class BarretWAM_4(Manipulator):
     lb = 0
     lc = 0.35
 
-    def __init__(self):
-        super().__init__(BarretWAM_4.manipName, BarretWAM_4.manipDOF, BarretWAM_4.manipJointTypes)
+    def isInWorkspace(self, point : Point):
+        return True               ################## DRAMIN DPS COLOCA UMA FUNCAO AQUI QUE VE SE O PONTO TA NO ESPACO DE TRABALHO
 
     def fkine(self, jointVals : Joints):
-       px = la*np.cos(jointVals.q1)*np.sin(jointVals.q2) - lc*np.cos(jointVals.q4)*(np.sin(jointVals.q1)*np.sin(jointVals.q3) - np.cos(jointVals.q1)*np.cos(jointVals.q2)*np.cos(jointVals.q3)) - lc*np.cos(jointVals.q1)*np.sin(jointVals.q2)*np.sin(jointVals.q4)
-       py = lc*np.cos(q4)*(np.cos(jointVals.q1)*np.sin(jointVals.q3) + np.cos(jointVals.q2)*np.cos(jointVals.q3)*np.sin(jointVals.q1)) + la*np.sin(jointVals.q1)*np.sin(jointVals.q2) - lc*np.sin(jointVals.q1)*np.sin(jointVals.q2)*np.sin(jointVals.q4)
-       pz = la*np.cos(jointVals.q2) - lc*np.cos(jointVals.q2)*np.sin(jointVals.q4) - lc*np.cos(jointVals.q3)*np.cos(jointVals.q4)*np.sin(jointVals.q2) 
+       px = BarretWAM_4.la*np.cos(jointVals[0])*np.sin(jointVals[1]) - BarretWAM_4.lc*np.cos(jointVals[3])*(np.sin(jointVals[0])*np.sin(jointVals[2]) - np.cos(jointVals[0])*np.cos(jointVals[1])*np.cos(jointVals[2])) - BarretWAM_4.lc*np.cos(jointVals[0])*np.sin(jointVals[1])*np.sin(jointVals[3])
+       py = BarretWAM_4.lc*np.cos(jointVals[3])*(np.cos(jointVals[0])*np.sin(jointVals[2]) + np.cos(jointVals[1])*np.cos(jointVals[2])*np.sin(jointVals[0])) + BarretWAM_4.la*np.sin(jointVals[0])*np.sin(jointVals[1]) - BarretWAM_4.lc*np.sin(jointVals[0])*np.sin(jointVals[1])*np.sin(jointVals[3])
+       pz = BarretWAM_4.la*np.cos(jointVals[1]) - BarretWAM_4.lc*np.cos(jointVals[1])*np.sin(jointVals[3]) - BarretWAM_4.lc*np.cos(jointVals[2])*np.cos(jointVals[3])*np.sin(jointVals[1])
        
-       return position.Point(px,py,pz)  ######## DRAMIN COLOCA AQUI A CINEMATICA DIRETA PF kkkkkkkkkk (SO DA TRANSLACAO MSM, A SAIDA EH UM POINT)
+       return Point(px,py,pz)
 
     def ikine(self, point : Point):
         q1 = np.arctan2(point.y, point.x)
@@ -78,10 +84,5 @@ class BarretWAM_4(Manipulator):
 robot = BarretWAM_4()
 print(robot)
 jointVals = robot.ikine(Point(-0.292, 0.38, 0.051))
-print(jointVals)
-jointVals[0] = np.deg2rad(30)
-print(jointVals)
-jointVals[2] = jointVals[1]
-print(jointVals)
-#jointVals[0] = np.deg2rad(361)  ## DA ERRO PQ TA FORA DO LIMITE (TESTE)
-#jointVals2 = BarretWAM_4.Joints(0, 3, 0, np.deg2rad(361))   ## DA ERRO PQ TA FORA DO LIMITE (TESTE)
+position = robot.fkine(jointVals)
+print(position)

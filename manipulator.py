@@ -1,6 +1,7 @@
 # Classe abstrata que representa um manipulador genérico
 
 import abc
+from point import Point
 
 class Manipulator(abc.ABC):
     def __init__(self, name, dof, jointTypes):
@@ -18,11 +19,20 @@ class Manipulator(abc.ABC):
     jointTypes = property(get_jointTypes, None)
 
     @abc.abstractmethod
-    def fkine(self, jointVals):
+    class Joints():
+        def __init__(self):
+            raise NotImplementedError()
+
+    @abc.abstractmethod
+    def isInWorkspace(self, point : Point):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def ikine(self, point):
+    def fkine(self, jointVals : Joints):
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def ikine(self, point : Point):
         raise NotImplementedError()
 
     def __str__(self):
