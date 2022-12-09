@@ -69,12 +69,8 @@ class BarretWAM_4(Manipulator):
         q3 = 0
         q4 = np.arcsin(((point.x*np.cos(q1) + point.y*np.sin(q1))**2 + (-point.z)**2 - BarretWAM_4.lc**2 - BarretWAM_4.la**2)/(-2*BarretWAM_4.la*BarretWAM_4.lc))
         
-        c1 = BarretWAM_4.lc*np.cos(q4)
-        c2 = BarretWAM_4.la - BarretWAM_4.lc*np.sin(q4)
-        c3 = point.x*np.cos(q1) + point.y*np.sin(q1)
-        c4 = -point.z
-        sin_q2 = ((c4 + c2*c3/c1)/(c2*c2/c1 + c1))
-        cos_q2 = (c3-c2*sin_q2)/c1
+        sin_q2 = ((BarretWAM_4.la - BarretWAM_4.lc*np.sin(q4))*(point.x*np.cos(q1) + point.y*np.sin(q1))/(BarretWAM_4.lc*np.cos(q4)) - point.z)/((BarretWAM_4.la - BarretWAM_4.lc*np.sin(q4))**2/(BarretWAM_4.lc*np.cos(q4)) + BarretWAM_4.lc*np.cos(q4))
+        cos_q2 = (point.x*np.cos(q1) + point.y*np.sin(q1) - (BarretWAM_4.la - BarretWAM_4.lc*np.sin(q4))*sin_q2)/(BarretWAM_4.lc*np.cos(q4))
         
         q2 = np.arctan2(sin_q2, cos_q2)
         
