@@ -1,5 +1,3 @@
-# Classe que representa um ponto no espaço 3D
-
 from math import sqrt
 
 class Point:

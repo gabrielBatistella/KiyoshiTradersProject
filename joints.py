@@ -1,5 +1,3 @@
-# Classe abstrata que representa as juntas de um manipulador genérico
-
 import numpy as np
 import abc
 
@@ -14,7 +12,7 @@ class Joints(abc.ABC):
     joints : float list
         Manipulator's joint values, only accepts values within limits.
     """
-    
+
     def __init__(self, dof):
         self._joints = [None] * dof
 

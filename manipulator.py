@@ -1,5 +1,3 @@
-# Classe abstrata que representa um manipulador genérico
-
 import abc
 from point import Point
 from joints import Joints

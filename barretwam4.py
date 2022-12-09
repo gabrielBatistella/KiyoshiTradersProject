@@ -1,7 +1,3 @@
-# Código de cinemática inversa para o manipulador Barrett-WAM com 4 graus de liberdade
-# 4 juntas rotativas
-# Cinemática Inversa calculada manualmente
-
 import numpy as np
 from point import Point
 from joints import Joints
@@ -18,27 +14,27 @@ class BarretWAM_4(Manipulator):
     name : string
         name of the manipulator (Barret-WAM (4 DOF))
     dof : int
-        manipulator's number of degrees of freedom (4)
+        Barret-WAM's number of degrees of freedom (4)
     jointTypes : boolean tuple
         indicates the type of the joints; True = rotative, False = prismatic (RRRR)
     jointLims : float tuple tuple
         indicates the limits of the joints ((-150, 150), (-113, 113), (-157, 157), (-140, 90))
     speed : float
-        avarage speed of the manipulator's end-effector
+        avarage speed of the Barret-WAM's end-effector
     
     Methods
     -------
     isInWorkspace(point):
-        Verify if the given point is inside of the manipulator's workspace.
+        Verify if the given point is inside of the Barret-WAM's workspace.
     fkine(jointVals):
-        Calculates the manipulator's end-effector position in the space for given joint values - forward kinematics.
+        Calculates the Barret-WAM's end-effector position in the space for given joint values - forward kinematics.
     ikine(point):
-        Calculates the manipulator's joint values for given end-effector position in the space - inverse kinematics.
+        Calculates the Barret-WAM's joint values for given end-effector position in the space - inverse kinematics.
     
     Inner Class
     -----------
     Joints:
-        A structure that stores the manipulator's joint values.
+        A structure that stores the Barret-WAM's joint values.
     """
     _manipName = "Barret-WAM (4 DOF)"
     _manipDOF = 4
@@ -97,7 +93,7 @@ class BarretWAM_4(Manipulator):
 
     def isInWorkspace(self, point:Point):
         """
-        Verifies if the given point is inside of the manipulator's workspace.
+        Verifies if the given point is inside of the Barret-WAM's workspace.
         
         Parameters
         ----------
@@ -114,17 +110,17 @@ class BarretWAM_4(Manipulator):
 
     def fkine(self, jointVals:Joints):
         """
-        Calculates the manipulator's end-effector position in the space for given joint values - forward kinematics.
+        Calculates the Barret-WAM's end-effector position in the space for given joint values - forward kinematics.
         
         Parameters
         ----------
         jointVals : BarretWAM_4.Joints
-            Manipulator's joint values.
+            Barret-WAM's joint values.
 
         Returns
         -------
         point : Point
-            x, y and z coordinates of a point in 3D space for the manipulator's end-effector given values.
+            x, y and z coordinates of a point in 3D space for the Barret-WAM's end-effector given values.
         """
 
         px = BarretWAM_4._la*np.cos(jointVals[0])*np.sin(jointVals[1]) - BarretWAM_4._lc*np.cos(jointVals[3])*(np.sin(jointVals[0])*np.sin(jointVals[2]) - np.cos(jointVals[0])*np.cos(jointVals[1])*np.cos(jointVals[2])) - BarretWAM_4._lc*np.cos(jointVals[0])*np.sin(jointVals[1])*np.sin(jointVals[3])
@@ -135,7 +131,7 @@ class BarretWAM_4(Manipulator):
 
     def ikine(self, point:Point):
         """
-        Calculates the manipulator's joint values for given end-effector position in the space - inverse kinematics.
+        Calculates the Barret-WAM's joint values for given end-effector position in the space - inverse kinematics.
         
         Parameters
         ----------
@@ -145,9 +141,9 @@ class BarretWAM_4(Manipulator):
         Returns
         -------
         jointVals : BarretWAM_4.Joints
-            Manipulator's joint values for the given point.
+            Barret-WAM's joint values for the given point.
         """
-        
+
         q1 = np.arctan2(point.y, point.x)
         q3 = 0
         q4 = np.arcsin(((point.x*np.cos(q1) + point.y*np.sin(q1))**2 + (-point.z)**2 - BarretWAM_4._lc**2 - BarretWAM_4._la**2)/(-2*BarretWAM_4._la*BarretWAM_4._lc))
