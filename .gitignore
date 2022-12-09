@@ -1,3 +1,6 @@
+# Pycache
+*.pyc
+
 # Prerequisites
 *.d
 

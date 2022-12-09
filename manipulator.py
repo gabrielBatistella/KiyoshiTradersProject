@@ -2,6 +2,7 @@
 
 import abc
 from point import Point
+from joints import Joints
 
 class Manipulator(abc.ABC):
     def __init__(self, name, dof, jointTypes, speed = 0.05):
@@ -10,38 +11,37 @@ class Manipulator(abc.ABC):
         self._jointTypes = jointTypes
         self._speed = speed
 
-    def get_dof(self):
+    def _getDOF(self):
         return self._dof
 
-    def get_jointTypes(self):
+    def _getJointTypes(self):
         return self._jointTypes
 
-    def get_speed(self):
+    def _getSpeed(self):
         return self._speed
     
-    def set_speed(self, speed):
+    def _setSpeed(self, speed):
         self._speed = speed
 
-    dof = property(get_dof, None)
-    jointTypes = property(get_jointTypes, None)
-    speed = property(get_speed, set_speed)
+    dof = property(_getDOF, None)
+    jointTypes = property(_getJointTypes, None)
+    speed = property(_getSpeed, _setSpeed)
 
     @abc.abstractmethod
-    class Joints():
-        def __init__(self):
-            raise NotImplementedError()
+    class Joints(Joints):
+        pass
 
     @abc.abstractmethod
-    def isInWorkspace(self, point : Point):
-        raise NotImplementedError()
+    def isInWorkspace(self, point:Point):
+        pass
 
     @abc.abstractmethod
-    def fkine(self, jointVals : Joints):
-        raise NotImplementedError()
+    def fkine(self, jointVals:Joints):
+        pass
 
     @abc.abstractmethod
-    def ikine(self, point : Point):
-        raise NotImplementedError()
+    def ikine(self, point:Point):
+        pass
 
     def __str__(self):
         return self._name
