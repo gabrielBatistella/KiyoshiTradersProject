@@ -72,11 +72,3 @@ class BarretWAM_4(Manipulator):
         q2 = np.arctan2(sin_q2, cos_q2)
         
         return BarretWAM_4.Joints(q1, q2, q3, q4)
-
-
-robot = BarretWAM_4()
-print(robot)
-jointVals = robot.ikine(Point(-0.292, 0.38, 0.051))
-position = robot.fkine(jointVals)
-print(position)
-print(jointVals)
