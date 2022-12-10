@@ -16,7 +16,7 @@ class BarretWAM_4(Manipulator):
     dof : int
         Barret-WAM's number of degrees of freedom (4)
     jointTypes : boolean tuple
-        indicates the type of the joints; True = rotative, False = prismatic (RRRR)
+        indicates the type of the joints ; True = rotative, False = prismatic (RRRR)
     jointLims : float tuple tuple
         indicates the limits of the joints ((-150, 150), (-113, 113), (-157, 157), (-140, 90))
     speed : float
@@ -106,7 +106,11 @@ class BarretWAM_4(Manipulator):
             Whether given point is inside of the workspace.
         """
 
-        return True               ########## DRAMIN DPS COLOCA UMA FUNCAO AQUI QUE VE SE O PONTO TA NO ESPACO DE TRABALHO (retorna boolean)
+        try:
+            self.ikine(point)
+            return True
+        except ValueError:
+            return False
 
     def fkine(self, jointVals:Joints):
         """

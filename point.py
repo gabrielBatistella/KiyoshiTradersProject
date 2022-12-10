@@ -49,4 +49,3 @@ class Point:
 
     def __str__(self):
         return "(" + str(round(self._x, 2)) + " ; " + str(round(self._y, 2)) + " ; " + str(round(self._z, 2)) + ")"
-p = Point()

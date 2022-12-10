@@ -15,14 +15,16 @@ class TrajectoryPlanner:
         if len(pathPoints) < 2:
             raise ValueError
 
+        coeffs = [[]] * self._manip.dof
+        for point in pathPoints:
+            if not self._manip.isInWorkspace(point):
+                print("Trajectory goes OUTSIDE the Workspace!!")
+                return False, coeffs
+
         pathJointVals = []
-        try:
-            for point in pathPoints:
-                jointVals = self._manip.ikine(point)
-                pathJointVals.append(jointVals)
-        except ValueError:
-            print("Trajectory goes OUTSIDE the Workspace!!")
-            return False, coeffs
+        for point in pathPoints:
+            jointVals = self._manip.ikine(point)
+            pathJointVals.append(jointVals)
 
         pathJointValsFormatted = [[]] * self._manip.dof
         for jointIndex in range(self._manip.dof):
@@ -33,11 +35,10 @@ class TrajectoryPlanner:
             distance = (pathPoints[pointIndex + 1] - pathPoints[pointIndex]).dist()
             times[pointIndex] = max((distance/self._manip.speed, 0.1))
 
-        coeffs = [[]] * self._manip.dof
         for jointIndex in range(self._manip.dof):
             coeffs[jointIndex] = self._polynomialCurvesThroughJointValues(pathJointValsFormatted[jointIndex], times)
 
-        return coeffs
+        return True, coeffs
 
     def _polynomialCurvesThroughJointValues(self, values, times):
         numberOfCurves = len(values) - 1
@@ -77,4 +78,6 @@ class TrajectoryPlanner:
 robot = BarretWAM_4()
 planner = TrajectoryPlanner(robot)
 
-planner.trajectoryBetweenPoints((Point(-0.292, 0.38, 0.051), Point(-0.292, 0.38, 0.051)))
+ret, coeffs = planner.trajectoryBetweenPoints((Point(-0.292, 0.38, 0.051), Point(-0.292, 0.38, 0.051)))
+print(ret)
+print(coeffs)
