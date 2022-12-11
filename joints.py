@@ -1,4 +1,3 @@
-import numpy as np
 import abc
 
 class Joints(abc.ABC):
@@ -9,7 +8,7 @@ class Joints(abc.ABC):
 
     Attributes
     ----------
-    joints : float list
+    joints : list[float]
         Manipulator's joint values, only accepts values within limits.
     """
 

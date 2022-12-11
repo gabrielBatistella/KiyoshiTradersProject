@@ -2,16 +2,31 @@
 # Calcula trajetórias com polinômios do 3º grau
 
 import numpy as np
+from math import ceil
 from point import Point
 from manipulator import Manipulator
 
 from barretwam4 import BarretWAM_4
 
 class TrajectoryPlanner:
+    _maxDistanceBetweenPointsInLine = 0.1
+
     def __init__(self, manip : Manipulator):
         self._manip = manip
 
-    def trajectoryBetweenPoints(self, pathPoints:tuple[Point]):
+    def lineBetweenPoints(self, startPoint:Point, endPoint:Point):
+        numberOfIntermediatePoints = ceil(((endPoint - startPoint).dist())/TrajectoryPlanner._maxDistanceBetweenPointsInLine) - 1
+        intermediatePoints = []
+
+        if numberOfIntermediatePoints > 0:
+            displacementBetweenPoints = (endPoint - startPoint)/(numberOfIntermediatePoints + 1)
+            for pointIndex in range(numberOfIntermediatePoints):
+                nextPoint = startPoint + (pointIndex + 1)*displacementBetweenPoints
+                intermediatePoints.append(nextPoint)
+
+        return self.trajectoryThroughPoints((startPoint, *intermediatePoints, endPoint))
+
+    def trajectoryThroughPoints(self, pathPoints:tuple[Point]):
         if len(pathPoints) < 2:
             raise ValueError
 
@@ -21,6 +36,15 @@ class TrajectoryPlanner:
                 print("Trajectory goes OUTSIDE the Workspace!!")
                 return False, coeffs
 
+        pathJointValsFormatted = self._calculateJointValuesOnPathPoints(pathPoints)
+        times = self._estimateTrajectoryStepsDuration(pathPoints)
+
+        for jointIndex in range(self._manip.dof):
+            coeffs[jointIndex] = self._polynomialCurvesThroughJointValues(pathJointValsFormatted[jointIndex], times)
+
+        return True, coeffs
+
+    def _calculateJointValuesOnPathPoints(self, pathPoints):
         pathJointVals = []
         for point in pathPoints:
             jointVals = self._manip.ikine(point)
@@ -30,15 +54,15 @@ class TrajectoryPlanner:
         for jointIndex in range(self._manip.dof):
             pathJointValsFormatted[jointIndex] = [jointVals[jointIndex] for jointVals in pathJointVals]
 
+        return pathJointValsFormatted
+
+    def _estimateTrajectoryStepsDuration(self, pathPoints):
         times = [0] * (len(pathPoints) - 1)
         for pointIndex in range(len(pathPoints) - 1):
             distance = (pathPoints[pointIndex + 1] - pathPoints[pointIndex]).dist()
             times[pointIndex] = max((distance/self._manip.speed, 0.1))
 
-        for jointIndex in range(self._manip.dof):
-            coeffs[jointIndex] = self._polynomialCurvesThroughJointValues(pathJointValsFormatted[jointIndex], times)
-
-        return True, coeffs
+        return times
 
     def _polynomialCurvesThroughJointValues(self, values, times):
         numberOfCurves = len(values) - 1
@@ -78,6 +102,7 @@ class TrajectoryPlanner:
 robot = BarretWAM_4()
 planner = TrajectoryPlanner(robot)
 
-ret, coeffs = planner.trajectoryBetweenPoints((Point(-0.292, 0.38, 0.051), Point(-0.292, 0.38, 0.051)))
+print(robot.ikine(Point(-0.292, 0.38, 0.051)))
+ret, coeffs = planner.lineBetweenPoints(Point(-0.292, 0.38, 0.051), Point(-0.292, 0.38, 0.051))
 print(ret)
 print(coeffs)

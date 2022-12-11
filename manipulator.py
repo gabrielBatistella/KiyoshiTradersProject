@@ -14,9 +14,9 @@ class Manipulator(abc.ABC):
         name of the manipulator
     dof : int
         manipulator's number of degrees of freedom
-    jointTypes : boolean tuple
+    jointTypes : tuple[bool]
         indicates the type of the joints; True = rotative, False = prismatic
-    jointLims : float tuple tuple
+    jointLims : tuple[tuple[float]]
         indicates the limits of the joints
     speed : float
         avarage speed of the manipulator's end-effector

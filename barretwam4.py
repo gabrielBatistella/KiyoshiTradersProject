@@ -1,4 +1,5 @@
-import numpy as np
+#import numpy as np
+from math import radians, degrees, cos, sin, asin, atan2
 from point import Point
 from joints import Joints
 from manipulator import Manipulator
@@ -15,9 +16,9 @@ class BarretWAM_4(Manipulator):
         name of the manipulator (Barret-WAM (4 DOF))
     dof : int
         Barret-WAM's number of degrees of freedom (4)
-    jointTypes : boolean tuple
+    jointTypes : tuple[bool]
         indicates the type of the joints ; True = rotative, False = prismatic (RRRR)
-    jointLims : float tuple tuple
+    jointLims : tuple[tuple[float]]
         indicates the limits of the joints ((-150, 150), (-113, 113), (-157, 157), (-140, 90))
     speed : float
         avarage speed of the Barret-WAM's end-effector
@@ -39,10 +40,10 @@ class BarretWAM_4(Manipulator):
     _manipName = "Barret-WAM (4 DOF)"
     _manipDOF = 4
     _manipJointTypes = (True, True, True, True)
-    _manipJointLims = ((np.deg2rad(-150), np.deg2rad(150)),
-                       (np.deg2rad(-113), np.deg2rad(113)),
-                       (np.deg2rad(-157), np.deg2rad(157)),
-                       (np.deg2rad(-140), np.deg2rad(90)))
+    _manipJointLims = ((radians(-150), radians(150)),
+                       (radians(-113), radians(113)),
+                       (radians(-157), radians(157)),
+                       (radians(-140), radians(90)))
 
     def __init__(self):
         super().__init__(BarretWAM_4._manipName, BarretWAM_4._manipDOF, BarretWAM_4._manipJointTypes, BarretWAM_4._manipJointLims)
@@ -55,7 +56,7 @@ class BarretWAM_4(Manipulator):
 
         Attributes
         ----------
-        joints : float list
+        joints : list[float]
             Barret-WAM's joint values, only accepts values within limits.
         """
 
@@ -79,7 +80,7 @@ class BarretWAM_4(Manipulator):
             for joint, jointType in zip(self._joints, BarretWAM_4._manipJointTypes):
                 jointFormatted = ""
                 if jointType:
-                    jointFormatted += str(round(np.rad2deg(joint), 2))
+                    jointFormatted += str(round(degrees(joint), 2))
                 else:
                     jointFormatted += str(round(joint, 2))
                 string += jointFormatted + " ; "
@@ -102,7 +103,7 @@ class BarretWAM_4(Manipulator):
 
         Returns
         -------
-        xxx : boolean
+        isInWorkspace : bool
             Whether given point is inside of the workspace.
         """
 
@@ -127,9 +128,9 @@ class BarretWAM_4(Manipulator):
             x, y and z coordinates of a point in 3D space for the Barret-WAM's end-effector given values.
         """
 
-        px = BarretWAM_4._la*np.cos(jointVals[0])*np.sin(jointVals[1]) - BarretWAM_4._lc*np.cos(jointVals[3])*(np.sin(jointVals[0])*np.sin(jointVals[2]) - np.cos(jointVals[0])*np.cos(jointVals[1])*np.cos(jointVals[2])) - BarretWAM_4._lc*np.cos(jointVals[0])*np.sin(jointVals[1])*np.sin(jointVals[3])
-        py = BarretWAM_4._lc*np.cos(jointVals[3])*(np.cos(jointVals[0])*np.sin(jointVals[2]) + np.cos(jointVals[1])*np.cos(jointVals[2])*np.sin(jointVals[0])) + BarretWAM_4._la*np.sin(jointVals[0])*np.sin(jointVals[1]) - BarretWAM_4._lc*np.sin(jointVals[0])*np.sin(jointVals[1])*np.sin(jointVals[3])
-        pz = BarretWAM_4._la*np.cos(jointVals[1]) - BarretWAM_4._lc*np.cos(jointVals[1])*np.sin(jointVals[3]) - BarretWAM_4._lc*np.cos(jointVals[2])*np.cos(jointVals[3])*np.sin(jointVals[1])
+        px = BarretWAM_4._la*cos(jointVals[0])*sin(jointVals[1]) - BarretWAM_4._lc*cos(jointVals[3])*(sin(jointVals[0])*sin(jointVals[2]) - cos(jointVals[0])*cos(jointVals[1])*cos(jointVals[2])) - BarretWAM_4._lc*cos(jointVals[0])*sin(jointVals[1])*sin(jointVals[3])
+        py = BarretWAM_4._lc*cos(jointVals[3])*(cos(jointVals[0])*sin(jointVals[2]) + cos(jointVals[1])*cos(jointVals[2])*sin(jointVals[0])) + BarretWAM_4._la*sin(jointVals[0])*sin(jointVals[1]) - BarretWAM_4._lc*sin(jointVals[0])*sin(jointVals[1])*sin(jointVals[3])
+        pz = BarretWAM_4._la*cos(jointVals[1]) - BarretWAM_4._lc*cos(jointVals[1])*sin(jointVals[3]) - BarretWAM_4._lc*cos(jointVals[2])*cos(jointVals[3])*sin(jointVals[1])
        
         return Point(px,py,pz)
 
@@ -148,12 +149,12 @@ class BarretWAM_4(Manipulator):
             Barret-WAM's joint values for the given point.
         """
 
-        q1 = np.arctan2(point.y, point.x)
+        q1 = atan2(point.y, point.x)
         q3 = 0
-        q4 = np.arcsin(((point.x*np.cos(q1) + point.y*np.sin(q1))**2 + (-point.z)**2 - BarretWAM_4._lc**2 - BarretWAM_4._la**2)/(-2*BarretWAM_4._la*BarretWAM_4._lc))
+        q4 = asin(((point.x*cos(q1) + point.y*sin(q1))**2 + (-point.z)**2 - BarretWAM_4._lc**2 - BarretWAM_4._la**2)/(-2*BarretWAM_4._la*BarretWAM_4._lc))
         
-        sin_q2 = ((BarretWAM_4._la - BarretWAM_4._lc*np.sin(q4))*(point.x*np.cos(q1) + point.y*np.sin(q1))/(BarretWAM_4._lc*np.cos(q4)) - point.z)/((BarretWAM_4._la - BarretWAM_4._lc*np.sin(q4))**2/(BarretWAM_4._lc*np.cos(q4)) + BarretWAM_4._lc*np.cos(q4))
-        cos_q2 = (point.x*np.cos(q1) + point.y*np.sin(q1) - (BarretWAM_4._la - BarretWAM_4._lc*np.sin(q4))*sin_q2)/(BarretWAM_4._lc*np.cos(q4))
-        q2 = np.arctan2(sin_q2, cos_q2)
+        sin_q2 = ((BarretWAM_4._la - BarretWAM_4._lc*sin(q4))*(point.x*cos(q1) + point.y*sin(q1))/(BarretWAM_4._lc*cos(q4)) - point.z)/((BarretWAM_4._la - BarretWAM_4._lc*sin(q4))**2/(BarretWAM_4._lc*cos(q4)) + BarretWAM_4._lc*cos(q4))
+        cos_q2 = (point.x*cos(q1) + point.y*sin(q1) - (BarretWAM_4._la - BarretWAM_4._lc*sin(q4))*sin_q2)/(BarretWAM_4._lc*cos(q4))
+        q2 = atan2(sin_q2, cos_q2)
         
         return BarretWAM_4.Joints(q1, q2, q3, q4)
