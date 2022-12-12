@@ -25,11 +25,14 @@ class Manipulator(abc.ABC):
     -------
     isInWorkspace(point):
         Verifies if the given point is inside of the manipulator's workspace.
+        If argument is a iterable, verify all points.
     fkine(jointVals):
         Calculates the manipulator's end-effector position in the space for given joint values - forward kinematics.
+        If argument is a iterable, apply method to all values.
     ikine(point):
         Calculates the manipulator's joint values for given end-effector position in the space - inverse kinematics.
-    
+        If argument is a iterable, apply method to all points.
+
     Inner Class
     -----------
     Joints:
@@ -72,25 +75,31 @@ class Manipulator(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def isInWorkspace(self, point:Point):
+    def isInWorkspace(self, point:Point | tuple[Point]):
         """
         Verifies if the given point is inside of the manipulator's workspace.
+        If argument is a iterable, verify all points.
+
         Abstract method to be implemented in subclass (specific manipulator).
         """
         pass
 
     @abc.abstractmethod
-    def fkine(self, jointVals:Joints):
+    def fkine(self, jointVals:Joints | tuple[Joints]):
         """
         Calculates the manipulator's end-effector position in the space for given joint values - forward kinematics.
+        If argument is a iterable, apply method to all values.
+
         Abstract method to be implemented in subclass (specific manipulator)
         """
         pass
 
     @abc.abstractmethod
-    def ikine(self, point:Point):
+    def ikine(self, point:Point | tuple[Point]):
         """
         Calculates the manipulator's joint values for given end-effector position in the space - inverse kinematics.
+        If argument is a iterable, apply method to all points.
+
         Abstract method to be implemented in subclass (specific manipulator)
         """
         pass

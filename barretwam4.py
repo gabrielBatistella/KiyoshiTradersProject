@@ -26,11 +26,14 @@ class BarretWAM_4(Manipulator):
     -------
     isInWorkspace(point):
         Verify if the given point is inside of the Barret-WAM's workspace.
+        If argument is a iterable, verify all points.
     fkine(jointVals):
         Calculates the Barret-WAM's end-effector position in the space for given joint values - forward kinematics.
+        If argument is a iterable, apply method to all values.
     ikine(point):
         Calculates the Barret-WAM's joint values for given end-effector position in the space - inverse kinematics.
-    
+        If argument is a iterable, apply method to all points.
+
     Inner Class
     -----------
     Joints:
@@ -94,10 +97,11 @@ class BarretWAM_4(Manipulator):
     def isInWorkspace(self, point:Point | tuple[Point]):
         """
         Verifies if the given point is inside of the Barret-WAM's workspace.
+        If argument is a iterable, verify all points.
         
         Parameters
         ----------
-        point : Point
+        point : Point | Iterable[Point]
             x, y and z coordinates of a point in 3D space for the end-effector.
 
         Returns
@@ -115,15 +119,16 @@ class BarretWAM_4(Manipulator):
     def fkine(self, jointVals:Joints | tuple[Joints]):
         """
         Calculates the Barret-WAM's end-effector position in the space for given joint values - forward kinematics.
-        
+        If argument is a iterable, apply method to all values.
+
         Parameters
         ----------
-        jointVals : BarretWAM_4.Joints
+        jointVals : BarretWAM_4.Joints | Iterable[BarretWAM_4.Joints]
             Barret-WAM's joint values.
 
         Returns
         -------
-        point : Point
+        point : Point | Iterable[Point]
             x, y and z coordinates of a point in 3D space for the Barret-WAM's end-effector given values.
         """
 
@@ -146,15 +151,16 @@ class BarretWAM_4(Manipulator):
     def ikine(self, point:Point | tuple[Point]):
         """
         Calculates the Barret-WAM's joint values for given end-effector position in the space - inverse kinematics.
-        
+        If argument is a iterable, apply method to all points.
+
         Parameters
         ----------
-        point : Point
+        point : Point | Iterable[Point]
             x, y and z coordinates of a point in 3D space for the end-effector.
 
         Returns
         -------
-        jointVals : BarretWAM_4.Joints
+        jointVals : BarretWAM_4.Joints | Iterable[BarretWAM_4.Joints]
             Barret-WAM's joint values for the given point.
         """
 

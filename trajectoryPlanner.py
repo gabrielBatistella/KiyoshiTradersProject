@@ -10,6 +10,27 @@ from manipulator import Manipulator
 from barretwam4 import BarretWAM_4
 
 class TrajectoryPlanner:
+    """ 
+    A class to calculate the trajectory of the end-effector of given manipulator
+
+    ...
+
+    Attributes
+    ----------
+    manip : Manipulator
+        manipulator to which will be given the trajectory
+    
+    Methods
+    -------
+    lineBetweenPoints(startPoint, endPoint):
+        Calculates a linear trajectory for the end-effector between two points.
+    curvesValues(allCoeffs, times):
+        Calculates points of joint values curve for given polynomial coefficients.
+    drawJointCurves(values, timeVector):
+        Plots the curves of joint values x time for given points in the curve.
+    drawTrajectory(values, timeVector, pointsToMark):
+        Plots the trajectory of end-effector in 3D.
+    """
     _maxDistanceBetweenPointsInLine = 0.1
     _numberOfPointsPerStepForCurveDrawing = 100
 
