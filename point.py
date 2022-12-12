@@ -59,6 +59,9 @@ class Point:
         else:
             raise TypeError("unsupported operand type(s) for -: 'Point' and " + type(other).__name__)
 
+    def __rmul__(self, other):
+        return self*other
+
     def __truediv__(self, other):
         if type(other) == int or type(other) == float:
             return Point(self._x/other, self._y/other, self._z/other)

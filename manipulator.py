@@ -1,6 +1,6 @@
 import abc
 from point import Point
-from joints import Joints
+from joints import Joints_
 
 class Manipulator(abc.ABC):
     """ 
@@ -64,7 +64,7 @@ class Manipulator(abc.ABC):
         self._speed = speed
 
     @abc.abstractmethod
-    class Joints(Joints):
+    class Joints(Joints_):
         """
         A structure that stores the manipulator's joint values.
         Abstract method to be implemented in subclass (specific manipulator).

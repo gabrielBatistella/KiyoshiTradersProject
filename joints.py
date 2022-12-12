@@ -1,6 +1,6 @@
 import abc
 
-class Joints(abc.ABC):
+class Joints_(abc.ABC):
     """ 
     An abstract class to represent the manipulator's joint values.
 
