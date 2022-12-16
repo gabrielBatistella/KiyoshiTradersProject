@@ -21,7 +21,7 @@ class TrajectoryPlanner:
     -------
     lineBetweenPoints(startPoint, endPoint):
         Calculates a linear trajectory for the end-effector between two points.
-    def trajectoryThroughPoints(pathPoints):
+    trajectoryThroughPoints(pathPoints):
         Calculates a trajectory for the end-effector through all the points in pathPoints.
     curvesValues(allCoeffs, times):
         Calculates values in time of joint values curve for given polynomial coefficients and curve durations.
@@ -31,13 +31,34 @@ class TrajectoryPlanner:
         Plots the trajectory of end-effector in 3D based on the joint values in time. Also highlights the start and end points of the trajectory. 
         If the argument pointsToMark is given, then highlights the points in pointsToMark.
     """
-    _maxDistanceBetweenPointsInLine = 0.05
+
+    _maxDistanceBetweenPointsInLine = 0.1
     _numberOfPointsPerStepForCurveDrawing = 100
 
     def __init__(self, manip : Manipulator):
         self._manip = manip
 
     def lineBetweenPoints(self, startPoint:Point, endPoint:Point):
+        """
+        Calculates a linear trajectory for the end-effector between two points.
+        
+        Parameters
+        ----------
+        startPoint:Point
+            x, y and z coordinates of end-effector start point.
+        endPoint:Point
+            x, y and z coordinates of end-effector end point.
+        
+        Returns
+        -------
+        succeeded : bool
+            Whether operation succeeded.
+        coeffs : tuple[tuple[tuple[float]]]
+            Polynomial coefficients for each curve of each joint.
+        times : tuple[float]
+            Duration of each curve.
+        """
+
         numberOfIntermediatePoints = ceil(((endPoint - startPoint).dist())/TrajectoryPlanner._maxDistanceBetweenPointsInLine) - 1
         intermediatePoints = []
 
@@ -50,6 +71,24 @@ class TrajectoryPlanner:
         return self.trajectoryThroughPoints((startPoint, *intermediatePoints, endPoint))
 
     def trajectoryThroughPoints(self, pathPoints:tuple[Point]):
+        """
+        Calculates a trajectory for the end-effector through all the points in pathPoints.
+        
+        Parameters
+        ----------
+        pathPoints:tuple[Point]
+            points to create end-effector's trajectory.
+        
+        Returns
+        -------
+        succeeded : bool
+            Whether operation succeeded.
+        coeffs : tuple[tuple[tuple[float]]]
+            Polynomial coefficients for each curve of each joint.
+        times : tuple[float]
+            Duration of each curve.
+        """
+
         if len(pathPoints) < 2:
             raise ValueError
 
@@ -68,6 +107,24 @@ class TrajectoryPlanner:
         return True, coeffs, times
 
     def curvesValues(self, allCoeffs:tuple[tuple[tuple[float]]], times:tuple[float]):
+        """
+        Calculates values in time of joint values curve for given polynomial coefficients and curve durations.
+        
+        Parameters
+        ----------
+        allCoeffs:tuple[tuple[tuple[float]]]
+            curves coefficients to create values in time of joint values
+        times:tuple[float]
+            duration of each curve
+        
+        Returns
+        -------
+        allValues : tuple[float]
+            Values of each joint values.
+        timeVector : tuple[float]
+            Times of each joint values. 
+        """
+
         formattedTimes = [0]
         for timeIndex in range(len(times)):
             formattedTimes.append(formattedTimes[timeIndex] + times[timeIndex])
@@ -95,6 +152,21 @@ class TrajectoryPlanner:
         return allValues, timeVector
 
     def drawJointCurves(self, values:tuple[tuple[float]], timeVector:tuple[float]):
+        """
+        Plots the curves of joint values x time for given values in time.
+        
+        Parameters
+        ----------
+        values:tuple[tuple[float]]
+            values of each joint values
+        timeVector:tuple[float]
+            times of each joint values
+        
+        Returns
+        -------
+        None
+        """
+        
         fig, axs = plt.subplots(2, 2)
 
         for jointIndex in range(len(values)):
@@ -116,6 +188,24 @@ class TrajectoryPlanner:
         plt.show()
 
     def drawTrajectory(self, values:tuple[tuple[float]], timeVector:tuple[float], pointsToMark:tuple[Point] = None):
+        """
+        Plots the trajectory of end-effector in 3D based on the joint values in time. Also highlights the start and end points of the trajectory. 
+        If the argument pointsToMark is given, then highlights the points in pointsToMark.
+
+        Parameters
+        ----------
+        values:tuple[tuple[float]]
+            values of each joint values
+        timeVector:tuple[float]
+            times of each joint values
+        pointsToMark:tuple[Point] = None
+            points to highlight, if no point is given, highlights the first and last point of trajectory
+
+        Returns
+        -------
+        None 
+        """
+
         formattedValues = []
         for timeIndex in range(len(timeVector)):
             formattedValues.append(self._manip.Joints(*[values[jointIndex][timeIndex] for jointIndex in range(self._manip.dof)]))
