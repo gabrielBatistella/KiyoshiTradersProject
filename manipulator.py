@@ -37,6 +37,11 @@ class Manipulator(abc.ABC):
     -----------
     Joints:
         A structure that stores the manipulator's joint values.
+
+    Implemented Operations
+    ----------------------
+    str : string = str(Manipulator)
+        S = "manip.name".
     """
     
     def __init__(self, name, dof, jointTypes, jointLims, speed = 0.05):

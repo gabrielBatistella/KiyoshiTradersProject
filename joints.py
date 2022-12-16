@@ -10,6 +10,17 @@ class Joints_(abc.ABC):
     ----------
     joints : list[float]
         Manipulator's joint values, only accepts values within limits.
+
+    Implemented Operations
+    ----------------------
+    getItem : float|int = Joints[int]
+        val = joints[idx].
+    setItem : Joints[int] = float|int
+        joints[idx] = val (only accepts values within limits).
+    iterator : Iterator = iter(Joints)
+        iter = joints (iterates over the joint values).
+    str : string = str(Joints)
+        S = "(joints[0] ; joints[1] ; ... ; joints[dof-1])".
     """
 
     def __init__(self, dof):

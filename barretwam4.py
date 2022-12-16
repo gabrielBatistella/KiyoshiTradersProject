@@ -38,7 +38,13 @@ class BarretWAM_4(Manipulator):
     -----------
     Joints:
         A structure that stores the Barret-WAM's joint values.
+
+    Implemented Operations
+    ----------------------
+    str : string = str(BarretWAM_4)
+        S = "Barret-WAM (4 DOF)".
     """
+
     _manipName = "Barret-WAM (4 DOF)"
     _manipDOF = 4
     _manipJointTypes = (True, True, True, True)
@@ -60,6 +66,17 @@ class BarretWAM_4(Manipulator):
         ----------
         joints : list[float]
             Barret-WAM's joint values, only accepts values within limits.
+
+        Implemented Operations
+        ----------------------
+        getItem : float|int = Joints[int]
+            val = joints[idx].
+        setItem : Joints[int] = float|int
+            joints[idx] = val (only accepts values within limits).
+        iterator : Iterator = iter(Joints)
+            iter = joints (iterates over the joint values).
+        str : string = str(Joints)
+            S = "(joints[0] ; joints[1] ; joints[2] ; joints[3])".
         """
 
         def __init__(self, q1 = None, q2 = None, q3 = None, q4 = None):
@@ -82,9 +99,9 @@ class BarretWAM_4(Manipulator):
             for joint, jointType in zip(self._joints, BarretWAM_4._manipJointTypes):
                 jointFormatted = ""
                 if jointType:
-                    jointFormatted += str(round(degrees(joint), 2))
+                    jointFormatted += str(round(degrees(joint), 2)) + "º"
                 else:
-                    jointFormatted += str(round(joint, 2))
+                    jointFormatted += str(round(joint, 2)) + "m"
                 string += jointFormatted + " ; "
             string = string.removesuffix(" ; ")
             string += ")"
