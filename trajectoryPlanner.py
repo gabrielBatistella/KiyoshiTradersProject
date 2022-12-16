@@ -18,18 +18,21 @@ class TrajectoryPlanner:
     Attributes
     ----------
     manip : Manipulator
-        manipulator to which will be given the trajectory
+        manipulator for which the trajectory will be calculated
     
     Methods
     -------
     lineBetweenPoints(startPoint, endPoint):
         Calculates a linear trajectory for the end-effector between two points.
+    def trajectoryThroughPoints(pathPoints):
+        Calculates a trajectory for the end-effector through all the points in pathPoints.
     curvesValues(allCoeffs, times):
-        Calculates points of joint values curve for given polynomial coefficients.
+        Calculates values in time of joint values curve for given polynomial coefficients and curve durations.
     drawJointCurves(values, timeVector):
-        Plots the curves of joint values x time for given points in the curve.
-    drawTrajectory(values, timeVector, pointsToMark):
-        Plots the trajectory of end-effector in 3D.
+        Plots the curves of joint values x time for given values in time.
+    drawTrajectory(values, timeVector, pointsToMark=None):
+        Plots the trajectory of end-effector in 3D based on the joint values in time. Also highlights the start and end points of the trajectory. 
+        If the argument pointsToMark is given, then highlights the points in pointsToMark.
     """
     _maxDistanceBetweenPointsInLine = 0.1
     _numberOfPointsPerStepForCurveDrawing = 100
@@ -67,7 +70,7 @@ class TrajectoryPlanner:
 
         return True, coeffs, times
 
-    def curvesValues(self, allCoeffs:tuple[tuple[float]], times:tuple[float]):
+    def curvesValues(self, allCoeffs:tuple[tuple[tuple[float]]], times:tuple[float]):
         formattedTimes = [0]
         for timeIndex in range(len(times)):
             formattedTimes.append(formattedTimes[timeIndex] + times[timeIndex])
@@ -193,9 +196,9 @@ point1 = Point(0.35, 0.0, 0.55)
 point2 = Point(-0.292, 0.38, 0.051)
 point3 = Point(0.2, 0.1, -0.1)
 
-ret, coeffs, durations = planner.lineBetweenPoints(point1, point2)
-
+ret, coeffs, durations = planner.trajectoryThroughPoints((point1, point2, point1))
+print(coeffs[0])
 if ret:
     values, time = planner.curvesValues(coeffs, durations)
-    planner.drawJointCurves(values, time)
-    planner.drawTrajectory(values, time)
+    #planner.drawJointCurves(values, time)
+    #planner.drawTrajectory(values, time)
