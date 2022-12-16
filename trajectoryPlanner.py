@@ -32,7 +32,7 @@ class TrajectoryPlanner:
         If the argument pointsToMark is given, then highlights the points in pointsToMark.
     """
 
-    _maxDistanceBetweenPointsInLine = 0.1
+    _maxDistanceBetweenPointsInLine = 0.05
     _numberOfPointsPerStepForCurveDrawing = 100
 
     def __init__(self, manip : Manipulator):
@@ -41,6 +41,8 @@ class TrajectoryPlanner:
     def lineBetweenPoints(self, startPoint:Point, endPoint:Point):
         """
         Calculates a linear trajectory for the end-effector between two points.
+        Aproximates a linear trajectory by dividing the path from the starting point to the end point into some number of smaller paths (by defining intermediate points).
+        The intermediate points are defined so that they are not spaced further than a pre-defined max distance
         
         Parameters
         ----------
@@ -52,7 +54,7 @@ class TrajectoryPlanner:
         Returns
         -------
         succeeded : bool
-            Whether operation succeeded.
+            Whether the operation succeeded (fails when desired trajectory goes out of workspace).
         coeffs : tuple[tuple[tuple[float]]]
             Polynomial coefficients for each curve of each joint.
         times : tuple[float]
@@ -73,7 +75,10 @@ class TrajectoryPlanner:
     def trajectoryThroughPoints(self, pathPoints:tuple[Point]):
         """
         Calculates a trajectory for the end-effector through all the points in pathPoints.
-        
+        Defines a 3rd degree polynomial trajectory between the 2 points in each pair of points.
+        Every trajectory is defined to have continuous acceleration and speed curves.
+        By joining all of the curves, the total trajectory through all points is defined to have initial and final speeds of zero.
+
         Parameters
         ----------
         pathPoints:tuple[Point]
@@ -82,7 +87,7 @@ class TrajectoryPlanner:
         Returns
         -------
         succeeded : bool
-            Whether operation succeeded.
+            Whether the operation succeeded (fails when desired trajectory goes out of workspace).
         coeffs : tuple[tuple[tuple[float]]]
             Polynomial coefficients for each curve of each joint.
         times : tuple[float]
