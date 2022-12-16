@@ -19,6 +19,21 @@ class Point:
     -------
     dist():
         Calculates the distance from the point to the origin (0, 0, 0).
+
+    Implemented Operations
+    ----------------------
+    addition : Point = Point + Point
+        P = (P1.x + P2.x, P1.y + P2.y, P1.z + P2.z).
+    subtraction : Point = Point - Point
+        P = (P1.x - P2.x, P1.y - P2.y, P1.z - P2.z).
+    multiplication : Point = Point * float|int
+        P = (P1.x * k, P1.y * k, P1.z * k).
+    reverse_multiplication : Point = float|int * Point
+        P = (P1.x * k, P1.y * k, P1.z * k).
+    true_division : Point = Point / float|int
+        P = (P1.x / k, P1.y / k, P1.z / k).
+    str : string = str(Point)
+        S = "(P1.x ; P1.y ; P1.z)".
     """
 
     def __init__(self, x, y, z):
@@ -39,6 +54,16 @@ class Point:
         return self._z
 
     def dist(self):
+        """
+        Calculates the distance from the point to the origin (0, 0, 0).
+        Can be used to calculate distance between 2 specific points by using (p1 - p2).dist().
+
+        Returns
+        -------
+        dist : float
+            Distance from the point to the origin (0, 0, 0).
+        """
+
         return sqrt(self._x**2 + self._y**2 + self._z**2)
 
     def __add__(self, other):

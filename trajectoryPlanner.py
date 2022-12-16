@@ -1,6 +1,3 @@
-# Código do planejador de trajetória
-# Calcula trajetórias com polinômios do 3º grau
-
 import numpy as np
 import matplotlib.pyplot as plt
 from math import ceil
@@ -34,7 +31,7 @@ class TrajectoryPlanner:
         Plots the trajectory of end-effector in 3D based on the joint values in time. Also highlights the start and end points of the trajectory. 
         If the argument pointsToMark is given, then highlights the points in pointsToMark.
     """
-    _maxDistanceBetweenPointsInLine = 0.1
+    _maxDistanceBetweenPointsInLine = 0.05
     _numberOfPointsPerStepForCurveDrawing = 100
 
     def __init__(self, manip : Manipulator):
@@ -188,17 +185,3 @@ class TrajectoryPlanner:
         A[0, 1] = 1
 
         return A, b
-
-robot = BarretWAM_4()
-planner = TrajectoryPlanner(robot)
-
-point1 = Point(0.35, 0.0, 0.55)
-point2 = Point(-0.292, 0.38, 0.051)
-point3 = Point(0.2, 0.1, -0.1)
-
-ret, coeffs, durations = planner.trajectoryThroughPoints((point1, point2, point1))
-print(coeffs[0])
-if ret:
-    values, time = planner.curvesValues(coeffs, durations)
-    #planner.drawJointCurves(values, time)
-    #planner.drawTrajectory(values, time)
