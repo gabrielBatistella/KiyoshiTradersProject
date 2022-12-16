@@ -4,8 +4,6 @@ from math import ceil
 from point import Point
 from manipulator import Manipulator
 
-from barretwam4 import BarretWAM_4
-
 class TrajectoryPlanner:
     """ 
     A class to calculate the trajectory of the end-effector of given manipulator

@@ -124,7 +124,7 @@ class BarretWAM_4(Manipulator):
         Returns
         -------
         isInWorkspace : bool
-            Whether given point is inside of the workspace.
+            Whether given point(s) is(are) inside of the workspace.
         """
 
         try:
@@ -146,7 +146,7 @@ class BarretWAM_4(Manipulator):
         Returns
         -------
         point : Point | Iterable[Point]
-            x, y and z coordinates of a point in 3D space for the Barret-WAM's end-effector given values.
+            x, y and z coordinates of point(s) in 3D space for the Barret-WAM's end-effector given values.
         """
 
         if type(jointVals) == BarretWAM_4.Joints:
@@ -173,7 +173,7 @@ class BarretWAM_4(Manipulator):
         Parameters
         ----------
         point : Point | Iterable[Point]
-            x, y and z coordinates of a point in 3D space for the end-effector.
+            x, y and z coordinates of point(s) in 3D space for the end-effector.
 
         Returns
         -------
