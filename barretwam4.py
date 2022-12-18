@@ -92,7 +92,7 @@ class BarretWAM_4(Manipulator):
             elif qx >= BarretWAM_4._manipJointLims[index][0] and qx <= BarretWAM_4._manipJointLims[index][1]:
                 self._joints[index] = qx
             else:
-                raise ValueError()
+                raise ValueError("Joint values are outside of workspace!")
 
         def __str__(self):
             string = "(" 
@@ -163,7 +163,7 @@ class BarretWAM_4(Manipulator):
             return pointsVec
 
         else:
-            raise TypeError()
+            raise TypeError("fkine can only operate on Joints, tuple[Joints] or list[Joints]")
 
     def ikine(self, point:Point | tuple[Point]):
         """
@@ -198,4 +198,4 @@ class BarretWAM_4(Manipulator):
             return jointValsVec
 
         else:
-            raise TypeError()
+            raise TypeError("ikine can only operate on Point, tuple[Point] or list[Point]")

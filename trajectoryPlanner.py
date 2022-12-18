@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from math import ceil
 from point import Point
 from manipulator import Manipulator
 
@@ -17,8 +16,6 @@ class TrajectoryPlanner:
     
     Methods
     -------
-    lineBetweenPoints(startPoint, endPoint):
-        Calculates a linear trajectory for the end-effector between two points.
     trajectoryThroughPoints(pathPoints):
         Calculates a trajectory for the end-effector through all the points in pathPoints.
     curvesValues(allCoeffs, times):
@@ -30,45 +27,11 @@ class TrajectoryPlanner:
         If the argument pointsToMark is given, then highlights the points in pointsToMark.
     """
 
-    _maxDistanceBetweenPointsInLine = 0.05
+    _trajectoryDescription = "Curved trajectory through points"
     _numberOfPointsPerStepForCurveDrawing = 100
 
     def __init__(self, manip : Manipulator):
         self._manip = manip
-
-    def lineBetweenPoints(self, startPoint:Point, endPoint:Point):
-        """
-        Calculates a linear trajectory for the end-effector between two points.
-        Aproximates a linear trajectory by dividing the path from the starting point to the end point into some number of smaller paths (by defining intermediate points).
-        The intermediate points are defined so that they are not spaced further than a pre-defined max distance
-        
-        Parameters
-        ----------
-        startPoint:Point
-            x, y and z coordinates of end-effector start point.
-        endPoint:Point
-            x, y and z coordinates of end-effector end point.
-        
-        Returns
-        -------
-        succeeded : bool
-            Whether the operation succeeded (fails when desired trajectory goes out of workspace).
-        coeffs : tuple[tuple[tuple[float]]]
-            Polynomial coefficients for each curve of each joint.
-        times : tuple[float]
-            Duration of each curve.
-        """
-
-        numberOfIntermediatePoints = ceil(((endPoint - startPoint).dist())/TrajectoryPlanner._maxDistanceBetweenPointsInLine) - 1
-        intermediatePoints = []
-
-        if numberOfIntermediatePoints > 0:
-            displacementBetweenPoints = (endPoint - startPoint)/(numberOfIntermediatePoints + 1)
-            for pointIndex in range(numberOfIntermediatePoints):
-                nextPoint = startPoint + (pointIndex + 1)*displacementBetweenPoints
-                intermediatePoints.append(nextPoint)
-
-        return self.trajectoryThroughPoints((startPoint, *intermediatePoints, endPoint))
 
     def trajectoryThroughPoints(self, pathPoints:tuple[Point]):
         """
@@ -93,7 +56,7 @@ class TrajectoryPlanner:
         """
 
         if len(pathPoints) < 2:
-            raise ValueError
+            raise ValueError("Needs at least 2 points to calculate trajectory")
 
         coeffs = [None] * self._manip.dof
         times = [0] * (len(pathPoints) - 1)

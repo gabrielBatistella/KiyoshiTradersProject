@@ -1,20 +1,79 @@
 from trajectoryPlanner import TrajectoryPlanner
+from lineTrajectoryPlanner import LineTrajectoryPlanner
 from barretwam4 import BarretWAM_4
 from point import Point
 
-x1, y1, z1 = [int(x) for x in input("Enter the initial coordinate ").split()]
-x2, y2, z2 = [int(x) for x in input("Enter the final coordinate ").split()]
+############################### INSTANCIATE DESIRED MANIPULATOR ####################################
 
-robot = BarretWAM_4()
-planner = TrajectoryPlanner(robot)
+manipulatorOptions = (BarretWAM_4, ) ### Change here if you want to add more manipulators
 
-point1 = Point(0.35, 0.0, 0.55)
-point2 = Point(-0.292, 0.38, 0.051)
-point3 = Point(0.2, 0.1, -0.1)
+inputText = "\n-------------------------------\n"
+for manipIndex in range(len(manipulatorOptions)):
+    inputText += "(" + str(manipIndex+1) + ") " + manipulatorOptions[manipIndex]._manipName + "\n"
+inputText += "Select manipulator: "
 
-ret, coeffs, durations = planner.lineBetweenPoints(point1, point2)
+whichRobot = 0
+while whichRobot not in range(1, len(manipulatorOptions) + 1):
+    whichRobot = int(input(inputText))
+    if whichRobot not in range(1, len(manipulatorOptions) + 1):
+        print("INVALID Input! Choose again")
 
-if ret:
-    values, time = planner.curvesValues(coeffs, durations)
-    planner.drawJointCurves(values, time)
-    planner.drawTrajectory(values, time)
+robot = manipulatorOptions[whichRobot-1]()
+
+
+
+############################ INSTANCIATE DESIRED TRAJECTORY PLANNER ################################
+
+trajectoryOptions = (TrajectoryPlanner, LineTrajectoryPlanner) ### Change here if you want to add more trajectory types
+
+inputText = "\n-------------------------------\n"
+for trajecIndex in range(len(trajectoryOptions)):
+    inputText += "(" + str(trajecIndex+1) + ") " + trajectoryOptions[trajecIndex]._trajectoryDescription + "\n"
+inputText += "Select trajectory type: "
+
+whichTrajectory = 0
+while whichTrajectory not in range(1, len(trajectoryOptions) + 1):
+    whichTrajectory = int(input(inputText))
+    if whichTrajectory not in range(1, len(trajectoryOptions) + 1):
+        print("INVALID Input! Choose again")
+
+planner = trajectoryOptions[whichTrajectory-1](robot)
+
+
+
+################################## INPUT POINTS FOR TRAJECTORY #####################################
+
+ret = False
+while not ret:
+    print("\n-------------------------------\n")
+    pointIndex = 1
+    pathPoints = []
+    while True:
+        point = None
+        inWorkspace = False
+        while not inWorkspace:
+            coords = input("Enter the coordinates for point" + str(pointIndex) + " (F to finish inputting points): ")
+            if coords == "F":
+                break
+            try:
+                x, y, z = [float(c) for c in coords.split()]
+            except ValueError:
+                print("INVALID Input! Enter again\n")
+                continue
+
+            point = Point(x, y, z)
+            inWorkspace = robot.isInWorkspace(point)
+            if not inWorkspace:
+                print("Point chosen is OUTSIDE the Workspace!! Choose again\n")
+
+        if point == None:
+            break
+        pointIndex += 1
+        pathPoints.append(point)
+
+    ret, coeffs, durations = planner.trajectoryThroughPoints(pathPoints)
+
+    if ret:
+        values, time = planner.curvesValues(coeffs, durations)
+        planner.drawJointCurves(values, time)
+        planner.drawTrajectory(values, time, pathPoints)
