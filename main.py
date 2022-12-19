@@ -14,9 +14,13 @@ inputText += "Select manipulator: "
 
 whichRobot = 0
 while whichRobot not in range(1, len(manipulatorOptions) + 1):
-    whichRobot = int(input(inputText))
-    if whichRobot not in range(1, len(manipulatorOptions) + 1):
+    try:
+        whichRobot = int(input(inputText))
+        if whichRobot not in range(1, len(manipulatorOptions) + 1):
+            print("INVALID Input! Choose again")
+    except ValueError:
         print("INVALID Input! Choose again")
+        continue
 
 robot = manipulatorOptions[whichRobot-1]()
 
@@ -33,15 +37,19 @@ inputText += "Select trajectory type: "
 
 whichTrajectory = 0
 while whichTrajectory not in range(1, len(trajectoryOptions) + 1):
-    whichTrajectory = int(input(inputText))
-    if whichTrajectory not in range(1, len(trajectoryOptions) + 1):
+    try:
+        whichTrajectory = int(input(inputText))
+        if whichTrajectory not in range(1, len(trajectoryOptions) + 1):
+            print("INVALID Input! Choose again")
+    except ValueError:
         print("INVALID Input! Choose again")
+        continue
 
 planner = trajectoryOptions[whichTrajectory-1](robot)
 
 
 
-################################## INPUT POINTS FOR TRAJECTORY #####################################
+############################## INPUT POINTS AND CALCULATE TRAJECTORY ################################
 
 ret = False
 while not ret:
@@ -52,6 +60,7 @@ while not ret:
         point = None
         inWorkspace = False
         while not inWorkspace:
+            point = None
             coords = input("Enter the coordinates for point" + str(pointIndex) + " (F to finish inputting points): ")
             if coords == "F":
                 break
@@ -71,7 +80,10 @@ while not ret:
         pointIndex += 1
         pathPoints.append(point)
 
-    ret, coeffs, durations = planner.trajectoryThroughPoints(pathPoints)
+    try:
+        ret, coeffs, durations = planner.trajectoryThroughPoints(pathPoints)
+    except ValueError as e:
+        print(e)
 
     if ret:
         values, time = planner.curvesValues(coeffs, durations)
