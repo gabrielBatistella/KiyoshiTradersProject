@@ -14,12 +14,39 @@ O usuário poderá optar por uma trajetória linear ou curva, e a partir de pont
 * <b>Enter the coordinates for point</b>: Insere os pontos da trajetória, são aceitos apenas pontos dentro do espaço de trabalho. O formato aceito para os pontos é com um <i>Space</i> entre as coordenadas, e um <i>Enter</i> entre um ponto e outro, por exemplo: 0.35 0 0.55. Após inserido os pontos, escrever F para sinalizar o fim dos pontos.
 
 ## :wrench: Tecnologias utilizadas
-* Python;
+* Python 3.11;
 
-## :rocket: Rodando o projeto
+## :rocket: Rodando no computador
 Para rodar o repositório é necessário clonar o mesmo e executar o seguinte comando para iniciar o programa:
 ```
 python main.py
+```
+
+## :rocket: Rodando no embarcado
+Na versão para o Colibri VF50 (Toradex), fizemos algumas adaptações no código, que podem ser visualizadas na pasta "Embedded version". Nessa versão, não utilizamos bibliotecas externas, como o matplotlib (porque não é possível visualizar gráficos na plaquinha) e o numpy (porque tivemos problemas na instalação da biblioteca, porém se fosse possível, essa biblioteca seria utilizada).
+
+O código pode ser passado para o embarcado usando o comando scp como feito nesse link: https://linuxize.com/post/how-to-use-scp-command-to-securely-transfer-files/.
+
+Para rodar o projeto no embarcado, primeiro temos que instalar o python. Fizemos isso com o comando:
+```
+opkg install python3
+```
+
+No nosso caso, tivemos problemas com o armazenamento disponível, então fizemos a instalação em uma memória externa, como descrito nesse link: https://community.onion.io/topic/3069/opkg-local-package-installation.
+
+Se tiver problemas com a memória temporária, use o seguinte comando antes da instalação (media/mmcblk0p2 é o path para a nossa memória externa):
+```
+export TMPDIR=/media/mmcblk0p2/tmp
+```
+
+Agora, com o python instalado, para executar o programa, primeiro temos que acrescentar o local de instalação do python ao PATH, com o comando:
+```
+export PATH=$PATH:/media/mmcblk0p2/usr/bin
+```
+
+Por fim, basta rodar o seguinte comando:
+```
+python3 main.py
 ```
 
 ## :handshake: Colaboradores
